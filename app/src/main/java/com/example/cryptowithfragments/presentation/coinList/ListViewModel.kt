@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 
 interface ListViewModelInterface {
     fun load()
+    fun changeIsFavorite(coin: Coin)
     fun search(name: String)
     val coins: MutableLiveData<List<Coin>>
     val originalCoins: List<Coin>
@@ -37,13 +38,16 @@ class ListViewModel(usecase: CoinUseCaseInterface) : ListViewModelInterface {
     override fun search(name: String) {
         try {
             scope.launch {
-//                println("Origin coin list $originalCoins")
                 val result = usecase.getCoinWithNameFromList(name, originalCoins)
                 coins.postValue(result)
             }
         } catch (e: Exception) {
             println("error")
         }
+    }
+
+    override fun changeIsFavorite(coin: Coin){
+        println("Coin $coin")
     }
 
 

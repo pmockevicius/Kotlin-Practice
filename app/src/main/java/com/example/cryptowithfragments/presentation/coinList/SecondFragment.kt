@@ -22,7 +22,10 @@ import com.example.cryptowithfragments.domain.usecase.CoinUseCase
 import com.example.cryptowithfragments.presentation.coinInfo.ThirdFragment
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
+import android.widget.ImageView
 import com.example.cryptowithfragments.data.datasource.CoinImageRemoteDataSource
+import com.example.cryptowithfragments.data.repository.ImageRepository
 
 
 class SecondFragment : Fragment(R.layout.fragment_second) {
@@ -31,8 +34,9 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
     var remoteDatasource = CoinRemoteDataSource()
     var mockDatasource = CoinMockDataSource()
     var remoteImageDataSource = CoinImageRemoteDataSource()
-    var repository = CoinRepository(remoteDatasource = remoteDatasource, mockDatasource = mockDatasource)
-    var usecase = CoinUseCase(repositoryCoin = repository)
+    var repositoryCoin = CoinRepository(remoteDatasource = remoteDatasource)
+    var repositoryImage = ImageRepository(remoteImageDataSource = remoteImageDataSource)
+    var usecase = CoinUseCase(repositoryCoin = repositoryCoin, repositoryImage = repositoryImage )
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,11 +72,49 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
         val linearLayout = view.findViewById<LinearLayout>(R.id.apiResponseTextView)
 
         viewModel.coins.observe(viewLifecycleOwner, Observer { cryptoInfoList ->
-            // Clear the existing views in the LinearLayout
             linearLayout.removeAllViews()
 
-            // Iterate through the list and display each item in the LinearLayout
             for (cryptoInfo in cryptoInfoList) {
+
+                //Favorite icon
+
+                val favoriteIconView = ImageView(requireContext())
+                favoriteIconView.layoutParams = LinearLayout.LayoutParams(
+                    resources.getDimensionPixelSize(R.dimen.icon_size), // Set your desired icon size
+                    resources.getDimensionPixelSize(R.dimen.icon_size)
+                )
+                var favoriteIconResource = if (cryptoInfo.isFavorite) {
+                    R.drawable.filled
+                } else {
+                    R.drawable.star
+                }
+                favoriteIconView.setImageResource(favoriteIconResource)
+
+                favoriteIconView.setOnClickListener {
+                    cryptoInfo.isFavorite = !cryptoInfo.isFavorite
+
+                    var favoriteIconResource = if (cryptoInfo.isFavorite) {
+                        R.drawable.filled
+                    } else {
+                        R.drawable.star
+                    }
+                    favoriteIconView.setImageResource(favoriteIconResource)
+
+                    viewModel.changeIsFavorite(cryptoInfo)
+                    println("i was pressed ${cryptoInfo.name}")
+                }
+
+                val cryptoInfoLayout = LinearLayout(requireContext())
+                cryptoInfoLayout.gravity = Gravity.END
+                cryptoInfoLayout.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                cryptoInfoLayout.addView(favoriteIconView)
+                linearLayout.addView(cryptoInfoLayout)
+
+
+
 
                 val changePercent24Hr = cryptoInfo.changePercent24Hr + "%"
 

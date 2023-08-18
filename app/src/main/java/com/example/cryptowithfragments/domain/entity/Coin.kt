@@ -13,7 +13,9 @@ data class Coin  (
     val volumeUsd24Hr: String,
     val priceUsd: String,
     val changePercent24Hr: String,
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    var isFavorite: Boolean = false
+
 
 
 ) : Serializable

@@ -42,19 +42,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.962">
-
+        app:layout_constraintVertical_bias="0.907">
 
         <LinearLayout
             android:id="@+id/apiResponseTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
             android:orientation="vertical"
             android:padding="16dp"
-            android:textSize="35sp" />
+            android:textSize="35sp">
+
+            <!-- Each item in the LinearLayout -->
+            <LinearLayout
+                android:id="@+id/cryptoInfoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- ImageView for the image -->
+                <!-- Set a placeholder image -->
+
+                <!-- TextView for other information -->
+
+                <TextView
+                    android:id="@+id/coinInfoTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <!-- Repeat similar layouts for other items -->
+
 
     </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
