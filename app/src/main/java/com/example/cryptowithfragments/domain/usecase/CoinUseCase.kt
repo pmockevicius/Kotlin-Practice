@@ -11,6 +11,15 @@ interface CoinUseCaseInterface {
     suspend fun getImages(): List<Image>
     suspend fun getCoinWithNameFromList(name: String, ofList: List<Coin>): List<Coin>
     suspend fun getCoinsWithImage(): List<Coin>
+    suspend fun saveFavorites(coin: Coin)
+
+    suspend fun loadFavorites(): List<Coin>
+
+    suspend fun addSavedIsFavoriteStatus(): List<Coin>
+    suspend fun getFinalCoins(): List<Coin>
+
+    suspend fun deleteFavorite(coin: Coin)
+
 }
 
 class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: ImageRepositoryInterface) : CoinUseCaseInterface {
@@ -43,7 +52,38 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
             coin.copy(imageUrl = matchingImage?.image ?: "")
         }
 
+        loadFavorites()
         return coinsWithImages
     }
+
+    override suspend fun saveFavorites(coin: Coin){
+        repositoryCoin.saveFavorite(coin)
+    }
+
+    override suspend fun loadFavorites(): List<Coin> {
+        var favoriteCoins = repositoryCoin.loadFavorites()
+        return favoriteCoins
+    }
+
+    override suspend fun addSavedIsFavoriteStatus(): List<Coin> {
+        val coins = getCoinsWithImage()
+        val favorites = loadFavorites()
+
+        coins.forEach { coin ->
+            if (favorites.any { it.id == coin.id }) {
+                coin.isFavorite = true
+            }
+        }
+        return coins
+    }
+
+    override suspend fun getFinalCoins(): List<Coin> {
+        return addSavedIsFavoriteStatus()
+    }
+
+    override suspend fun deleteFavorite(coin: Coin) {
+        repositoryCoin.deleteFavorite(coin)
+    }
+
 
 }

@@ -1,8 +1,6 @@
 package com.example.cryptowithfragments.data.repository
 
-import com.example.cryptowithfragments.data.datasource.CoinDataSourceInterface
-import com.example.cryptowithfragments.data.datasource.CoinImageDataSourceInterface
-import com.example.cryptowithfragments.domain.entity.Coin
+import com.example.cryptowithfragments.data.datasource.image.CoinImageDataSourceInterface
 import com.example.cryptowithfragments.domain.entity.Image
 
 interface ImageRepositoryInterface {

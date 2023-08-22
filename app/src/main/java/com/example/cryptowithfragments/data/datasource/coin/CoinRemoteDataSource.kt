@@ -1,4 +1,4 @@
-package com.example.cryptowithfragments.data.datasource
+package com.example.cryptowithfragments.data.datasource.coin
 
 import com.example.cryptowithfragments.domain.entity.Coin
 import kotlinx.coroutines.Dispatchers
@@ -9,9 +9,7 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-interface CoinDataSourceInterface {
-    suspend fun getCoins(): List<Coin>
-}
+
 
 class CoinRemoteDataSource: CoinDataSourceInterface {
     override suspend fun getCoins(): List<Coin> {
@@ -45,6 +43,19 @@ class CoinRemoteDataSource: CoinDataSourceInterface {
             parseApiResponse(apiResponse = response)
         }
     }
+
+    override suspend fun saveFavorite(coin: Coin) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadFavorites(): List<Coin> {
+        return listOf()
+    }
+
+    override suspend fun deleteFavorite(coin: Coin) {
+        TODO("Not yet implemented")
+    }
+
 
     private fun parseApiResponse(apiResponse: String): List<Coin> {
         val jsonObject = JSONObject(apiResponse)

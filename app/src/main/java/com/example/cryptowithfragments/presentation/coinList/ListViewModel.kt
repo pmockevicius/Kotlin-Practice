@@ -13,6 +13,12 @@ interface ListViewModelInterface {
     fun search(name: String)
     val coins: MutableLiveData<List<Coin>>
     val originalCoins: List<Coin>
+
+    suspend fun saveFavorites(coin: Coin)
+
+    suspend fun deleteFavorite(coin: Coin)
+
+    suspend fun loadfavorites(): List<Coin>
 }
 
 class ListViewModel(usecase: CoinUseCaseInterface) : ListViewModelInterface {
@@ -24,10 +30,8 @@ class ListViewModel(usecase: CoinUseCaseInterface) : ListViewModelInterface {
     override fun load() {
             try {
                 scope.launch {
-//                    originalCoins = usecase.getCoins()
-                    originalCoins = usecase.getCoinsWithImage()
+                    originalCoins = usecase.getFinalCoins()
                     coins.postValue(originalCoins)
-//                    originalCoins = coins.value ?: emptyList()
                     println("Origin coin list $originalCoins")
                 }
             } catch (e: Exception) {
@@ -48,6 +52,19 @@ class ListViewModel(usecase: CoinUseCaseInterface) : ListViewModelInterface {
 
     override fun changeIsFavorite(coin: Coin){
         println("Coin $coin")
+    }
+
+
+     override suspend fun saveFavorites(coin: Coin){
+         usecase.saveFavorites(coin)
+    }
+
+    override suspend fun deleteFavorite(coin: Coin) {
+        usecase.deleteFavorite(coin)
+    }
+
+    override suspend fun loadfavorites(): List<Coin> {
+        return usecase.loadFavorites()
     }
 
 

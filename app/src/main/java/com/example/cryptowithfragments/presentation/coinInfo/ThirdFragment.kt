@@ -2,20 +2,12 @@ package com.example.cryptowithfragments.presentation.coinInfo
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.cryptowithfragments.R
-import com.example.cryptowithfragments.data.datasource.CoinImageRemoteDataSource
-import com.example.cryptowithfragments.data.datasource.CoinMockDataSource
-import com.example.cryptowithfragments.data.datasource.CoinRemoteDataSource
-import com.example.cryptowithfragments.data.repository.CoinRepository
 import com.example.cryptowithfragments.domain.entity.Coin
-import com.example.cryptowithfragments.domain.usecase.CoinUseCase
-import com.example.cryptowithfragments.presentation.coinList.ListViewModel
 
 class ThirdFragment : Fragment(R.layout.fragment_third) {
 

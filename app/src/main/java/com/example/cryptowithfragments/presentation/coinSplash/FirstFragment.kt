@@ -18,14 +18,6 @@ class FirstFragment : Fragment(R.layout.fragment_first) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btnFragment22 = view.findViewById<Button>(R.id.btnFragment22)
-        btnFragment22.setOnClickListener {
-            val secondFragment = SecondFragment() // Create an instance of the SecondFragment
-            parentFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, secondFragment) // Replace current fragment with secondFragment
-                addToBackStack(null) // Add the transaction to the back stack for navigation
-                commit() // Commit the transaction
-            }
-        }
+
     }
 }

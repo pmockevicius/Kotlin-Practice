@@ -1,4 +1,4 @@
-package com.example.cryptowithfragments.data.datasource
+package com.example.cryptowithfragments.data.datasource.image
 
 import com.example.cryptowithfragments.domain.entity.Image
 import kotlinx.coroutines.Dispatchers
