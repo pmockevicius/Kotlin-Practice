@@ -10,6 +10,7 @@ import kotlinx.coroutines.MainScope
 
 interface FavoritesViewModelInterface{
     suspend fun loadfavorites(): List<Coin>
+    suspend fun deleteFavorite(coin: Coin)
 
 }
 
@@ -24,7 +25,9 @@ class FavoritesViewModel(usecase: CoinUseCaseInterface) : FavoritesViewModelInte
         return usecase.loadFavorites()
     }
 
-
+    override suspend fun deleteFavorite(coin: Coin) {
+        usecase.deleteFavorite(coin)
+    }
 
 
 

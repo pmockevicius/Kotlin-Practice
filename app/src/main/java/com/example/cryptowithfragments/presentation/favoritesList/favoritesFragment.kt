@@ -2,89 +2,138 @@ package com.example.cryptowithfragments.presentation.favoritesList
 
 import CoinLocalDataSource
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Button
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cryptowithfragments.R
 import com.example.cryptowithfragments.data.datasource.coin.CoinRemoteDataSource
+import com.example.cryptowithfragments.data.datasource.image.CoinImageLocalDataSource
 import com.example.cryptowithfragments.data.datasource.image.CoinImageRemoteDataSource
 import com.example.cryptowithfragments.data.repository.CoinRepository
 import com.example.cryptowithfragments.data.repository.ImageRepository
-import com.example.cryptowithfragments.domain.entity.Coin
 import com.example.cryptowithfragments.domain.usecase.CoinUseCase
 import com.example.cryptowithfragments.presentation.coinInfo.ThirdFragment
-import com.example.cryptowithfragments.presentation.coinList.ListViewModel
-import com.example.cryptowithfragments.presentation.coinList.ListViewModelInterface
-import com.example.cryptowithfragments.presentation.coinList.SecondFragment
+import com.example.cryptowithfragments.presentation.coinList2.CoinListAdapter
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [favoritesFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class favoritesFragment : Fragment(R.layout.favorites_fragment) {
+class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
 
     private lateinit var viewModel: FavoritesViewModelInterface
-
-
     private val scope = MainScope()
 
     private lateinit var usecase: CoinUseCase
-    var remoteDatasource = CoinRemoteDataSource()
-    var remoteImageDataSource = CoinImageRemoteDataSource()
-    lateinit var localDataSource: CoinLocalDataSource
-    lateinit var repositoryCoin: CoinRepository
-    lateinit var repositoryImage: ImageRepository
+    lateinit var localImageDataSource: CoinImageLocalDataSource
+    private lateinit var localDataSource: CoinLocalDataSource
+    private lateinit var repositoryCoin: CoinRepository
+    private lateinit var repositoryImage: ImageRepository
+    private lateinit var adapter: favoriteCoinAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupDependencies()
+        setupViewModel()
+        setupRecyclerView()
+    }
+
+    private fun setupDependencies() {
+        localImageDataSource = CoinImageLocalDataSource(requireContext())
         localDataSource = CoinLocalDataSource(requireContext())
-        repositoryCoin =
-            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource)
-        repositoryImage = ImageRepository(remoteImageDataSource = remoteImageDataSource)
+        repositoryCoin = CoinRepository(
+            remoteDatasource = CoinRemoteDataSource(),
+            localDataSource = localDataSource
+        )
+        repositoryImage = ImageRepository(remoteImageDataSource = CoinImageRemoteDataSource(), localImageDataSource = localImageDataSource)
         usecase = CoinUseCase(repositoryCoin = repositoryCoin, repositoryImage = repositoryImage)
+    }
 
+    private fun setupViewModel() {
         viewModel = FavoritesViewModel(usecase = usecase)
+    }
 
+//    private fun setupRecyclerView() {
+//        val rvList: RecyclerView = requireView().findViewById(R.id.rvList)
+//        val layoutManager = LinearLayoutManager(requireContext())
+//       adapter = favoriteCoinAdapter(emptyList(),
+//            onItemClick = {  clickedCoin ->
+//            val thirdFragment = ThirdFragment()
+//            val bundle = Bundle()
+//            bundle.putSerializable("cryptoInfo", clickedCoin)
+//
+//            thirdFragment.arguments = bundle
+//
+//            parentFragmentManager.beginTransaction().apply {
+//                replace(R.id.flFragment, thirdFragment)
+//                addToBackStack(null)
+//                commit()
+//            }
+//        },
+//            onItemFavIconClick = { clickedCoin ->
+//                scope.launch {
+//                    viewModel.deleteFavorite(clickedCoin)
+//                }
+//
+//                scope.launch {
+//                        var favoriteCoins = viewModel.loadfavorites()
+//                        adapter.updateData(favoriteCoins)
+//                    }
+//            }
+//        )
+//
+//        rvList.layoutManager = layoutManager
+//        rvList.adapter = adapter
+//
+//        scope.launch {
+//            val favoriteCoins = viewModel.loadfavorites()
+//            adapter.updateData(favoriteCoins)
+//        }
+//    }
 
-        //Recycler View
+    fun setupRecyclerView() {
+        context?.let {
+            val rvList: RecyclerView? = view?.findViewById(R.id.rvList)
 
+            val layoutManager = LinearLayoutManager(requireContext())
+            adapter = favoriteCoinAdapter(
+                emptyList(),
+                onItemClick = { clickedCoin ->
+                    val thirdFragment = ThirdFragment()
+                    val bundle = Bundle()
+                    bundle.putSerializable("cryptoInfo", clickedCoin)
 
-        var favoriteCoins: List<Coin> = listOf()
+                    thirdFragment.arguments = bundle
 
-        val rvList: RecyclerView = view.findViewById(R.id.rvList)
+                    parentFragmentManager.beginTransaction().apply {
+                        replace(R.id.flFragment, thirdFragment)
+                        addToBackStack(null)
+                        commit()
+                    }
+                },
+                onItemFavIconClick = { clickedCoin ->
+                    scope.launch {
+                        viewModel.deleteFavorite(clickedCoin)
+                    }
 
+                    scope.launch {
+                        var favoriteCoins = viewModel.loadfavorites()
+                        adapter.updateData(favoriteCoins)
+                    }
+                }, it
+            )
 
-        val layoutManager = LinearLayoutManager(requireContext())
-        val adapter = favoriteCoinAdapter(emptyList()){ clickedCoin ->
-            val thirdFragment = ThirdFragment()
-
-            val bundle = Bundle()
-            bundle.putSerializable("cryptoInfo", clickedCoin)
-
-            thirdFragment.arguments = bundle
-
-
-            parentFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, thirdFragment)
-                addToBackStack(null)
-                commit()
+            if (rvList != null) {
+                rvList.layoutManager = layoutManager
+            }
+            if (rvList != null) {
+                rvList.adapter = adapter
             }
 
-        }
-
-        rvList.layoutManager = layoutManager
-        rvList.adapter = adapter
-
-        scope.launch {
-            favoriteCoins = viewModel.loadfavorites()
-            adapter.updateData(favoriteCoins)
+            scope.launch {
+                val favoriteCoins = viewModel.loadfavorites()
+                adapter.updateData(favoriteCoins)
+            }
         }
 
     }

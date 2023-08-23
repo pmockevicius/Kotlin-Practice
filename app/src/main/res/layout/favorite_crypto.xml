@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="300sp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#B8DFD3"
         app:cardCornerRadius="15dp"
@@ -56,11 +56,10 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="horizontal"
-                android:background="?android:attr/selectableItemBackground"> <!-- Provides touch feedback -->
+                android:background="?android:attr/selectableItemBackground">
 
-                <!-- Favorite Icon -->
                 <ImageView
-                    android:id="@+id/ivFavorite"
+                    android:id="@+id/isFavorite"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_favorites"

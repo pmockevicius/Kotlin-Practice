@@ -26,6 +26,7 @@ import android.view.Gravity
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cryptowithfragments.data.datasource.image.CoinImageLocalDataSource
 import com.example.cryptowithfragments.data.datasource.image.CoinImageRemoteDataSource
 import com.example.cryptowithfragments.data.repository.ImageRepository
 import com.example.cryptowithfragments.domain.entity.Coin
@@ -44,6 +45,7 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
     private lateinit var usecase: CoinUseCase
     var remoteDatasource = CoinRemoteDataSource()
     var remoteImageDataSource = CoinImageRemoteDataSource()
+    lateinit var localImageDataSource: CoinImageLocalDataSource
     lateinit var localDataSource: CoinLocalDataSource
     lateinit var repositoryCoin: CoinRepository
     lateinit var repositoryImage: ImageRepository
@@ -51,10 +53,11 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        localImageDataSource= CoinImageLocalDataSource(requireContext())
         localDataSource = CoinLocalDataSource(requireContext())
         repositoryCoin =
             CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource)
-        repositoryImage = ImageRepository(remoteImageDataSource = remoteImageDataSource)
+        repositoryImage = ImageRepository(remoteImageDataSource = remoteImageDataSource, localImageDataSource = localImageDataSource)
         usecase = CoinUseCase(repositoryCoin = repositoryCoin, repositoryImage = repositoryImage)
 
 
@@ -64,37 +67,37 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
 
         //Recycler View
 
-
-        var favoriteCoins: List<Coin> = listOf()
-
-        val rvList: RecyclerView = view.findViewById(R.id.rvList)
-
-
-        val layoutManager = LinearLayoutManager(requireContext())
-        val adapter = favoriteCoinAdapter(emptyList()){ clickedCoin ->
-            val thirdFragment = ThirdFragment()
-
-            val bundle = Bundle()
-            bundle.putSerializable("cryptoInfo", clickedCoin)
-
-            thirdFragment.arguments = bundle
-
-
-            parentFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, thirdFragment)
-                addToBackStack(null)
-                commit()
-            }
-
-        }
-
-        rvList.layoutManager = layoutManager
-        rvList.adapter = adapter
-
-        scope.launch {
-            favoriteCoins = viewModel.loadfavorites()
-            adapter.updateData(favoriteCoins)
-        }
+//
+//        var favoriteCoins: List<Coin> = listOf()
+//
+//        val rvList: RecyclerView = view.findViewById(R.id.rvList)
+//
+//
+//        val layoutManager = LinearLayoutManager(requireContext())
+//        val adapter = favoriteCoinAdapter(emptyList()){ clickedCoin ->
+//            val thirdFragment = ThirdFragment()
+//
+//            val bundle = Bundle()
+//            bundle.putSerializable("cryptoInfo", clickedCoin)
+//
+//            thirdFragment.arguments = bundle
+//
+//
+//            parentFragmentManager.beginTransaction().apply {
+//                replace(R.id.flFragment, thirdFragment)
+//                addToBackStack(null)
+//                commit()
+//            }
+//
+//        }
+//
+//        rvList.layoutManager = layoutManager
+//        rvList.adapter = adapter
+//
+//        scope.launch {
+//            favoriteCoins = viewModel.loadfavorites()
+//            adapter.updateData(favoriteCoins)
+//        }
 
 
 
@@ -164,10 +167,10 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
                         favoriteIconView.setImageResource(setFavoriteIconResource(cryptoInfo))
                     }
 
-                    scope.launch {
-                        favoriteCoins = viewModel.loadfavorites()
-                        adapter.updateData(favoriteCoins)
-                    }
+//                    scope.launch {
+//                        favoriteCoins = viewModel.loadfavorites()
+//                        adapter.updateData(favoriteCoins)
+//                    }
                 }
 
                 val cryptoInfoLayout = LinearLayout(requireContext())
@@ -181,6 +184,8 @@ class SecondFragment : Fragment(R.layout.fragment_second) {
 
 
                 val changePercent24Hr = cryptoInfo.changePercent24Hr + "%"
+
+
 
                 val propertyString = buildString {
                     append( cryptoInfo.name,"\n")

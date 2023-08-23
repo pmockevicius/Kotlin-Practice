@@ -1,6 +1,7 @@
 package com.example.cryptowithfragments.data.datasource.image
 
 import com.example.cryptowithfragments.domain.entity.Image
+import com.example.cryptowithfragments.domain.entity.ImagesWithTimestamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -10,9 +11,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-interface CoinImageDataSourceInterface {
-    suspend fun getImages(): List<Image>
-}
+
 
 class CoinImageRemoteDataSource: CoinImageDataSourceInterface {
     override suspend fun getImages(): List<Image> {
@@ -45,6 +44,22 @@ class CoinImageRemoteDataSource: CoinImageDataSourceInterface {
 
             parseApiResponse(apiResponse = response)
         }
+    }
+
+    override suspend fun test() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveImages(imagesToBeSaved: List<Image>) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadImagesWithTimestamp(): ImagesWithTimestamp? {
+        TODO("Not yet implemented")
+    }
+
+     override suspend fun loadImages(): List<Image> {
+        TODO("Not yet implemented")
     }
 
     private fun parseApiResponse(apiResponse: String): List<Image> {

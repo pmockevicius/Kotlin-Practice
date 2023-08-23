@@ -42,6 +42,7 @@ class ThirdFragment : Fragment(R.layout.fragment_third) {
 
         Glide.with(this)
             .load(imageUrl)
+            .placeholder(R.drawable.ic_coins)
             .into(coinImageView)
 
     }

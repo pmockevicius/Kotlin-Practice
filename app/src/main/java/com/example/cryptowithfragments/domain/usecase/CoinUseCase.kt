@@ -19,6 +19,7 @@ interface CoinUseCaseInterface {
     suspend fun getFinalCoins(): List<Coin>
 
     suspend fun deleteFavorite(coin: Coin)
+    suspend fun test ()
 
 }
 
@@ -33,8 +34,12 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
 
 
     override suspend fun getCoinWithNameFromList(name: String, ofList: List<Coin>): List<Coin> {
+        println("name of coin in usecase ${name}")
+        println("ofList in usecase ${ofList}")
+
         var coins = ofList
         var filteredCoins = coins.filter { it.name.lowercase().contains(name) }
+        println("filtered coins from usecase $filteredCoins")
         return filteredCoins
     }
 
@@ -85,5 +90,9 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
         repositoryCoin.deleteFavorite(coin)
     }
 
+    override suspend fun test (){
+        println("test called in usecase ")
+        repositoryImage.test()
+    }
 
 }

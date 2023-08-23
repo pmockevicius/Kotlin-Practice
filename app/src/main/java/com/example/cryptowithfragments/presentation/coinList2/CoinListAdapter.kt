@@ -1,4 +1,4 @@
-package com.example.cryptowithfragments.presentation.favoritesList
+package com.example.cryptowithfragments.presentation.coinList2
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,15 +11,14 @@ import com.bumptech.glide.Glide
 import com.example.cryptowithfragments.R
 import com.example.cryptowithfragments.domain.entity.Coin
 
-class favoriteCoinAdapter(
-    var favoriteCoins: List<Coin>,
+class CoinListAdapter(
+    var originalCoins: List<Coin>,
     private val onItemClick: (Coin) -> Unit,
     private val onItemFavIconClick: (Coin) -> Unit,
     private val context: Context
+): RecyclerView.Adapter<CoinListAdapter.CoinlistViewHolder>() {
 
-): RecyclerView.Adapter<favoriteCoinAdapter.favoriteCoinViewHolder>() {
-
-    inner class favoriteCoinViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class CoinlistViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
         val nameTextView: TextView = itemView.findViewById(R.id.tvName)
         val priceTextView: TextView = itemView.findViewById(R.id.tvPrice)
@@ -31,38 +30,37 @@ class favoriteCoinAdapter(
 
         init {
             itemView.setOnClickListener {
-                onItemClick(favoriteCoins[adapterPosition])
+                onItemClick(originalCoins[adapterPosition])
 
-                println(favoriteCoins[adapterPosition])
+                println(originalCoins[adapterPosition])
             }
 
             favoriteIcon.setOnClickListener{
-                onItemFavIconClick(favoriteCoins[adapterPosition])
-                println("hey hey ${favoriteCoins[adapterPosition]}")
+                onItemFavIconClick(originalCoins[adapterPosition])
+                println("hey hey ${originalCoins[adapterPosition]}")
             }
 
         }
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): favoriteCoinViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinlistViewHolder {
         val view =  LayoutInflater.from(parent.context).inflate(R.layout.list_item, null, false)
-        return favoriteCoinViewHolder(view)
+        return CoinlistViewHolder(view)
 
         println("Im in adaptor")
     }
 
     override fun getItemCount(): Int {
-        return favoriteCoins.size
+        return originalCoins.size
 
     }
 
-    override fun onBindViewHolder(holder: favoriteCoinViewHolder, position: Int) {
-        val currentCoin = favoriteCoins[position]
+    override fun onBindViewHolder(holder: CoinlistViewHolder, position: Int) {
+        val currentCoin = originalCoins[position]
         holder.nameTextView.text = currentCoin.name
         holder.priceTextView.text = "Price USD: $ "+currentCoin.priceUsd
         holder.changeTextView.text = "Price Change 24h " +currentCoin.changePercent24Hr+"%"
-
 
         val favoriteIconResource = if (currentCoin.isFavorite) {
             R.drawable.ic_favorites_selected
@@ -70,20 +68,24 @@ class favoriteCoinAdapter(
             R.drawable.ic_favorites
         }
 
+        val imageUrl = currentCoin.imageUrl
+
+        println("image url $imageUrl")
+
         holder.favoriteIcon.setImageResource(favoriteIconResource)
 
-        val imageUrl = currentCoin.imageUrl
 
         Glide.with(context)
             .load(imageUrl)
-            .placeholder(R.drawable.ic_coins)
+           .placeholder(R.drawable.ic_coins)
             .error(R.drawable.ic_coins)
             .into(holder.coinImageView)
 
+
     }
 
-    fun updateData(newData: List<Coin>) {
-        favoriteCoins = newData
+    fun updateData(newData: List<Coin>){
+        originalCoins = newData
         notifyDataSetChanged()
     }
 
