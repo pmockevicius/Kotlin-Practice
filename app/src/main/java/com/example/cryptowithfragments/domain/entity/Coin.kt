@@ -2,13 +2,16 @@ package com.example.cryptowithfragments.domain.entity
 
 import java.io.Serializable
 
+data class CoinResponse(
+    val data: List<Coin>
+)
 data class Coin  (
     val id: String,
     val rank: String,
     val symbol: String,
     val name: String,
     val supply: String,
-    val maxSupply: String,
+    val maxSupply: String?,
     val marketCapUsd: String,
     val volumeUsd24Hr: String,
     val priceUsd: String,

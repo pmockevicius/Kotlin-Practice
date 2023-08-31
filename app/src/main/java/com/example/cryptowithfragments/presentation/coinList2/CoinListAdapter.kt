@@ -16,9 +16,9 @@ class CoinListAdapter(
     private val onItemClick: (Coin) -> Unit,
     private val onItemFavIconClick: (Coin) -> Unit,
     private val context: Context
-): RecyclerView.Adapter<CoinListAdapter.CoinlistViewHolder>() {
+) : RecyclerView.Adapter<CoinListAdapter.CoinlistViewHolder>() {
 
-    inner class CoinlistViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class CoinlistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val nameTextView: TextView = itemView.findViewById(R.id.tvName)
         val priceTextView: TextView = itemView.findViewById(R.id.tvPrice)
@@ -32,12 +32,10 @@ class CoinListAdapter(
             itemView.setOnClickListener {
                 onItemClick(originalCoins[adapterPosition])
 
-                println(originalCoins[adapterPosition])
             }
 
-            favoriteIcon.setOnClickListener{
+            favoriteIcon.setOnClickListener {
                 onItemFavIconClick(originalCoins[adapterPosition])
-                println("hey hey ${originalCoins[adapterPosition]}")
             }
 
         }
@@ -45,10 +43,9 @@ class CoinListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinlistViewHolder {
-        val view =  LayoutInflater.from(parent.context).inflate(R.layout.list_item, null, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, null, false)
         return CoinlistViewHolder(view)
 
-        println("Im in adaptor")
     }
 
     override fun getItemCount(): Int {
@@ -59,8 +56,8 @@ class CoinListAdapter(
     override fun onBindViewHolder(holder: CoinlistViewHolder, position: Int) {
         val currentCoin = originalCoins[position]
         holder.nameTextView.text = currentCoin.name
-        holder.priceTextView.text = "Price USD: $ "+currentCoin.priceUsd
-        holder.changeTextView.text = "Price Change 24h " +currentCoin.changePercent24Hr+"%"
+        holder.priceTextView.text = "Price USD: $ " + currentCoin.priceUsd
+        holder.changeTextView.text = "Price Change 24h " + currentCoin.changePercent24Hr + "%"
 
         val favoriteIconResource = if (currentCoin.isFavorite) {
             R.drawable.ic_favorites_selected
@@ -70,23 +67,29 @@ class CoinListAdapter(
 
         val imageUrl = currentCoin.imageUrl
 
-        println("image url $imageUrl")
 
         holder.favoriteIcon.setImageResource(favoriteIconResource)
 
 
         Glide.with(context)
             .load(imageUrl)
-           .placeholder(R.drawable.ic_coins)
+            .placeholder(R.drawable.ic_coins)
             .error(R.drawable.ic_coins)
             .into(holder.coinImageView)
 
 
     }
 
-    fun updateData(newData: List<Coin>){
+    fun updateData(newData: List<Coin>) {
         originalCoins = newData
         notifyDataSetChanged()
+    }
+
+    fun removeItemAtPosition(position: Int) {
+        val coins = originalCoins.toMutableList()
+        coins.removeAt(position)
+        originalCoins = coins
+        notifyItemRemoved(position)
     }
 
 }

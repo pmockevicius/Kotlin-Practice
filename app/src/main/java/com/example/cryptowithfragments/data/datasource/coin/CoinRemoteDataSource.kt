@@ -1,5 +1,6 @@
 package com.example.cryptowithfragments.data.datasource.coin
 
+import android.util.Log
 import com.example.cryptowithfragments.domain.entity.Coin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,15 +14,19 @@ import java.net.URL
 
 class CoinRemoteDataSource: CoinDataSourceInterface {
     override suspend fun getCoins(): List<Coin> {
+        Log.d("CoinRemoteDataSource"," getCoins got called")
+
         return withContext(Dispatchers.IO) {
             val url = URL("https://api.coincap.io/v2/assets")
             val connection = url.openConnection() as HttpURLConnection
 
             val response = try {
+                println("trying response")
                 connection.requestMethod = "GET"
                 val responseCode = connection.responseCode
-
+                println("before response Code OK")
                 if (responseCode == HttpURLConnection.HTTP_OK) {
+                    println("response Code OK")
                     val inputStream = connection.inputStream
                     val reader = BufferedReader(InputStreamReader(inputStream))
                     val response = StringBuilder()
@@ -39,6 +44,7 @@ class CoinRemoteDataSource: CoinDataSourceInterface {
             } finally {
                 connection.disconnect()
             }
+            println("response $response")
 
             parseApiResponse(apiResponse = response)
         }
@@ -58,6 +64,7 @@ class CoinRemoteDataSource: CoinDataSourceInterface {
 
 
     private fun parseApiResponse(apiResponse: String): List<Coin> {
+        println("parseApiResponse called with $apiResponse")
         val jsonObject = JSONObject(apiResponse)
         val dataArray = jsonObject.getJSONArray("data")
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/back1"
-    tools:context=".presentation.coinSplash.FirstFragment">
+    tools:context=".presentation.coinSplash.HomeFragment">
 
     <ImageView
         android:id="@+id/coinImageView"

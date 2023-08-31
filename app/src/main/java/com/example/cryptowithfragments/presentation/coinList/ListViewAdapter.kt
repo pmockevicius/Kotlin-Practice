@@ -33,7 +33,6 @@ class listViewAdapter(
 
             favoriteIcon.setOnClickListener{
                 onItemFavIconClick(favoriteCoins[adapterPosition])
-                println("hey hey ${favoriteCoins[adapterPosition]}")
             }
 
         }
@@ -43,8 +42,6 @@ class listViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): listViewHolder {
         val view =  LayoutInflater.from(parent.context).inflate(R.layout.favorite_crypto, null, false)
         return listViewHolder(view)
-
-        println("Im in adaptor")
     }
 
     override fun getItemCount(): Int {

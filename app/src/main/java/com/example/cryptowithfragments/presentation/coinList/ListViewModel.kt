@@ -35,7 +35,6 @@ class ListViewModel(usecase: CoinUseCaseInterface) : ListViewModelInterface {
                     println("Origin coin list $originalCoins")
                 }
             } catch (e: Exception) {
-                println("error")
             }
     }
 
@@ -51,7 +50,6 @@ class ListViewModel(usecase: CoinUseCaseInterface) : ListViewModelInterface {
     }
 
     override fun changeIsFavorite(coin: Coin){
-        println("Coin $coin")
     }
 
 

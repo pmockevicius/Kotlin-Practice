@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cryptowithfragments.R
 import com.example.cryptowithfragments.data.datasource.coin.CoinRemoteDataSource
+import com.example.cryptowithfragments.data.datasource.coin.CoinRemoteDataSourceWithRetro
 import com.example.cryptowithfragments.data.datasource.image.CoinImageLocalDataSource
 import com.example.cryptowithfragments.data.datasource.image.CoinImageRemoteDataSource
 import com.example.cryptowithfragments.data.repository.CoinRepository
 import com.example.cryptowithfragments.data.repository.ImageRepository
 import com.example.cryptowithfragments.domain.usecase.CoinUseCase
 import com.example.cryptowithfragments.presentation.coinInfo.ThirdFragment
-import com.example.cryptowithfragments.presentation.coinList2.CoinListAdapter
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -28,7 +28,7 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
     private lateinit var localDataSource: CoinLocalDataSource
     private lateinit var repositoryCoin: CoinRepository
     private lateinit var repositoryImage: ImageRepository
-    private lateinit var adapter: favoriteCoinAdapter
+    private lateinit var adapter: FavoriteCoinAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -96,7 +96,7 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
             val rvList: RecyclerView? = view?.findViewById(R.id.rvList)
 
             val layoutManager = LinearLayoutManager(requireContext())
-            adapter = favoriteCoinAdapter(
+            adapter = FavoriteCoinAdapter(
                 emptyList(),
                 onItemClick = { clickedCoin ->
                     val thirdFragment = ThirdFragment()

@@ -11,15 +11,15 @@ import com.bumptech.glide.Glide
 import com.example.cryptowithfragments.R
 import com.example.cryptowithfragments.domain.entity.Coin
 
-class favoriteCoinAdapter(
+class FavoriteCoinAdapter(
     var favoriteCoins: List<Coin>,
     private val onItemClick: (Coin) -> Unit,
     private val onItemFavIconClick: (Coin) -> Unit,
     private val context: Context
 
-): RecyclerView.Adapter<favoriteCoinAdapter.favoriteCoinViewHolder>() {
+): RecyclerView.Adapter<FavoriteCoinAdapter.FavoriteCoinViewHolder>() {
 
-    inner class favoriteCoinViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class FavoriteCoinViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
         val nameTextView: TextView = itemView.findViewById(R.id.tvName)
         val priceTextView: TextView = itemView.findViewById(R.id.tvPrice)
@@ -32,24 +32,20 @@ class favoriteCoinAdapter(
         init {
             itemView.setOnClickListener {
                 onItemClick(favoriteCoins[adapterPosition])
-
-                println(favoriteCoins[adapterPosition])
             }
 
             favoriteIcon.setOnClickListener{
                 onItemFavIconClick(favoriteCoins[adapterPosition])
-                println("hey hey ${favoriteCoins[adapterPosition]}")
             }
 
         }
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): favoriteCoinViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteCoinViewHolder {
         val view =  LayoutInflater.from(parent.context).inflate(R.layout.list_item, null, false)
-        return favoriteCoinViewHolder(view)
+        return FavoriteCoinViewHolder(view)
 
-        println("Im in adaptor")
     }
 
     override fun getItemCount(): Int {
@@ -57,7 +53,7 @@ class favoriteCoinAdapter(
 
     }
 
-    override fun onBindViewHolder(holder: favoriteCoinViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavoriteCoinViewHolder, position: Int) {
         val currentCoin = favoriteCoins[position]
         holder.nameTextView.text = currentCoin.name
         holder.priceTextView.text = "Price USD: $ "+currentCoin.priceUsd
@@ -86,5 +82,7 @@ class favoriteCoinAdapter(
         favoriteCoins = newData
         notifyDataSetChanged()
     }
+
+
 
 }

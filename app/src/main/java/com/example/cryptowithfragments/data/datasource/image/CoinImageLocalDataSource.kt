@@ -38,7 +38,6 @@ class CoinImageLocalDataSource(private val context: Context): CoinImageDataSourc
         val images = loadImages().toMutableList()
         images.addAll(imagesToBeSaved)
 
-        // Save current timestamp along with the images
         val imagesWithTimestamp = ImagesWithTimestamp(System.currentTimeMillis(), images)
 
         val imagesJson = gson.toJson(imagesWithTimestamp)
@@ -60,9 +59,7 @@ class CoinImageLocalDataSource(private val context: Context): CoinImageDataSourc
     }
 
      override suspend fun loadImagesWithTimestamp(): ImagesWithTimestamp? {
-         println("loadImagesWithTimestamp in local data storage called ")
         val imagesJson = sharedPreferences.getString(sharedPrefsKey, null)
-         println("imagesJson from local data base $imagesJson ")
         val type: Type = object : TypeToken<ImagesWithTimestamp>() {}.type
         return if (!imagesJson.isNullOrEmpty()) {
             gson.fromJson(imagesJson, type)

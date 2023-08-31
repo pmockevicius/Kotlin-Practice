@@ -1,5 +1,6 @@
 package com.example.cryptowithfragments.presentation.coinList2
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.cryptowithfragments.domain.entity.Coin
 import com.example.cryptowithfragments.domain.usecase.CoinUseCaseInterface
@@ -22,8 +23,7 @@ interface CoinListViewModelInterface {
     suspend fun test()
 }
 
-class CoinListViewModel(usecase: CoinUseCaseInterface) : CoinListViewModelInterface {
-    var usecase: CoinUseCaseInterface = usecase
+class CoinListViewModel(private val useCase: CoinUseCaseInterface) : CoinListViewModelInterface {
     override val coins: MutableLiveData<List<Coin>> = MutableLiveData<List<Coin>>()
     private val scope = MainScope()
     override var originalCoins : List<Coin> = listOf()
@@ -32,19 +32,19 @@ class CoinListViewModel(usecase: CoinUseCaseInterface) : CoinListViewModelInterf
 
     override suspend fun loadCoins(): List<Coin> {
         return try {
-            originalCoins = usecase.getFinalCoins()
+            println("trying in view model")
+            originalCoins = useCase.getFinalCoins()
+            println("originalCoins in view model $originalCoins")
             originalCoins
         } catch (e: Exception) {
-            println("error")
+            Log.e("loadCoins()",e.toString())
             emptyList()
         }
     }
 
     override suspend fun search(name: String): List<Coin> {
         return try {
-            println("search in viewModel ${usecase.getCoinWithNameFromList(name, originalCoins)} ")
-
-            usecase.getCoinWithNameFromList(name, originalCoins)
+            useCase.getCoinWithNameFromList(name, originalCoins)
 
 
         } catch (e: Exception) {
@@ -55,22 +55,19 @@ class CoinListViewModel(usecase: CoinUseCaseInterface) : CoinListViewModelInterf
 
 
      override suspend fun saveFavorites(coin: Coin){
-         usecase.saveFavorites(coin)
+         useCase.saveFavorites(coin)
     }
 
     override suspend fun deleteFavorite(coin: Coin) {
-        usecase.deleteFavorite(coin)
+        useCase.deleteFavorite(coin)
     }
 
     override suspend fun loadfavorites(): List<Coin> {
-        return usecase.loadFavorites()
+        return useCase.loadFavorites()
     }
 
     override suspend fun test(){
         println("test called in viewModel ")
-        usecase.test()
+        useCase.test()
     }
-
-
-
 }

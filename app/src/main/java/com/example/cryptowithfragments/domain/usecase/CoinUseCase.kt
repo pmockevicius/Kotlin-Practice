@@ -34,12 +34,10 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
 
 
     override suspend fun getCoinWithNameFromList(name: String, ofList: List<Coin>): List<Coin> {
-        println("name of coin in usecase ${name}")
-        println("ofList in usecase ${ofList}")
+
 
         var coins = ofList
         var filteredCoins = coins.filter { it.name.lowercase().contains(name) }
-        println("filtered coins from usecase $filteredCoins")
         return filteredCoins
     }
 
@@ -49,7 +47,11 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
 
     override suspend fun getCoinsWithImage(): List<Coin> {
         val coins = repositoryCoin.getCoins()
+        println("coins in getCoinsWithImage $coins ")
+
+        println("getCoinsWithImage called")
         val images = repositoryImage.getImages()
+        println("images in getCoinsWithImage $images ")
 
         val coinsWithImages = coins.map { coin ->
             val matchingImage = images.find { image -> image.id == coin.id
@@ -71,7 +73,11 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
     }
 
     override suspend fun addSavedIsFavoriteStatus(): List<Coin> {
+        println("addSavedIsFavoriteStatus in usecase called ")
+        println("favorites ${loadFavorites()}")
         val coins = getCoinsWithImage()
+        println("coins ")
+
         val favorites = loadFavorites()
 
         coins.forEach { coin ->
@@ -83,6 +89,7 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
     }
 
     override suspend fun getFinalCoins(): List<Coin> {
+        println("getFinalCoins in usecase ")
         return addSavedIsFavoriteStatus()
     }
 

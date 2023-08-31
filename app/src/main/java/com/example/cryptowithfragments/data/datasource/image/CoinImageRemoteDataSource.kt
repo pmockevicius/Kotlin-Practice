@@ -20,7 +20,7 @@ class CoinImageRemoteDataSource: CoinImageDataSourceInterface {
             val connection = url.openConnection() as HttpURLConnection
 
             val response = try {
-                connection.requestMethod = "GET"
+//                connection.requestMethod = "GET"
                 val responseCode = connection.responseCode
 
                 if (responseCode == HttpURLConnection.HTTP_OK) {

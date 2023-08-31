@@ -24,7 +24,6 @@ class CoinRepository(remoteDatasource: CoinDataSourceInterface, localDataSource:
     }
 
     override suspend fun saveFavorite(coin: Coin){
-        println("saveFavorites in repository")
         localDatasource.saveFavorite(coin)
     }
 

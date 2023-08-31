@@ -11,7 +11,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+
 }
+
 
 rootProject.name = "CryptoWithFragments"
 include(":app")

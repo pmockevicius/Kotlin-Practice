@@ -17,9 +17,7 @@ class DetailsViewModel(usecase: CoinUseCaseInterface) : DetailViewModelInterface
     override fun loadImages() {
         try {
             scope.launch {
-                println("we are here in DetailViewModel")
                 val result = usecase.getCoinsWithImage()
-                println("result is $result")
             }
         } catch (e: Exception) {
             println("error")

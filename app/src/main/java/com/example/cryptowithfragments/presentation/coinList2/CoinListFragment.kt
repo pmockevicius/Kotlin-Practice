@@ -4,6 +4,7 @@ import CoinLocalDataSource
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 
 import android.view.View
@@ -18,15 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.cryptowithfragments.data.datasource.coin.CoinRemoteDataSourceWithRetro
 import com.example.cryptowithfragments.data.datasource.image.CoinImageLocalDataSource
 import com.example.cryptowithfragments.data.datasource.image.CoinImageRemoteDataSource
 import com.example.cryptowithfragments.data.repository.ImageRepository
-import com.example.cryptowithfragments.domain.entity.Coin
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class coinListFragment : Fragment(R.layout.list_fragment) {
+class CoinListFragment : Fragment(R.layout.list_fragment) {
 
     private lateinit var viewModel: CoinListViewModelInterface
     private lateinit var searchEditText: EditText
@@ -34,7 +35,7 @@ class coinListFragment : Fragment(R.layout.list_fragment) {
 
     private val scope = MainScope()
 
-    private lateinit var usecase: CoinUseCase
+    private lateinit var useCase: CoinUseCase
     var remoteDatasource = CoinRemoteDataSource()
     var remoteImageDataSource = CoinImageRemoteDataSource()
     lateinit var localImageDataSource: CoinImageLocalDataSource
@@ -44,54 +45,54 @@ class coinListFragment : Fragment(R.layout.list_fragment) {
 
     private lateinit var adapter: CoinListAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+        localImageDataSource = CoinImageLocalDataSource(requireContext())
+        localDataSource = CoinLocalDataSource(requireContext())
+        repositoryCoin =
+            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource)
+        repositoryImage = ImageRepository(
+            remoteImageDataSource = remoteImageDataSource,
+            localImageDataSource = localImageDataSource
+        )
+        useCase = CoinUseCase(repositoryCoin = repositoryCoin, repositoryImage = repositoryImage)
+        viewModel = CoinListViewModel(useCase)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Glide.with(this).setDefaultRequestOptions(RequestOptions())
-
-        localImageDataSource= CoinImageLocalDataSource(requireContext())
-        localDataSource = CoinLocalDataSource(requireContext())
-        repositoryCoin = CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource)
-        repositoryImage = ImageRepository(remoteImageDataSource = remoteImageDataSource, localImageDataSource= localImageDataSource)
-        usecase = CoinUseCase(repositoryCoin = repositoryCoin, repositoryImage = repositoryImage)
-        viewModel = CoinListViewModel(usecase = usecase)
+//        Glide.with(this).setDefaultRequestOptions(RequestOptions())
 
         searchEditText = view.findViewById(R.id.searchEditText)
-
 
         setupRecyclerView()
         setupRefreshButtonListener()
         setUpSearchListener()
 
-
-
-
-
     }
 
-    fun setUpSearchListener(){
+    fun setUpSearchListener() {
         searchEditText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 var text = s.toString().lowercase()
-                println("text $text")
                 scope.launch {
                     var result = viewModel.search(text)
-                    println("res after search $result")
                     adapter.updateData(result)
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {
             }
         })
     }
 
 
-    fun setupRefreshButtonListener(){
+    fun setupRefreshButtonListener() {
         val btnRefresh = view?.findViewById<Button>(R.id.btnRefresh)
         if (btnRefresh != null) {
             btnRefresh.setOnClickListener {
@@ -104,12 +105,14 @@ class coinListFragment : Fragment(R.layout.list_fragment) {
             }
         }
     }
+
     fun setupRecyclerView() {
         context?.let {
             val rvList: RecyclerView? = view?.findViewById(R.id.rvList2)
 
             val layoutManager = LinearLayoutManager(requireContext())
-            adapter = CoinListAdapter(emptyList(),
+            adapter = CoinListAdapter(
+                emptyList(),
                 onItemClick = { clickedCoin ->
                     val thirdFragment = ThirdFragment()
                     val bundle = Bundle()
@@ -128,13 +131,11 @@ class coinListFragment : Fragment(R.layout.list_fragment) {
                         scope.launch {
                             viewModel.deleteFavorite(clickedCoin)
                             clickedCoin.isFavorite = !clickedCoin.isFavorite
-                            println("after clicking star delete ${clickedCoin.isFavorite}")
                         }
                     } else {
                         scope.launch {
                             clickedCoin.isFavorite = !clickedCoin.isFavorite
                             viewModel.saveFavorites(clickedCoin)
-                            println("after clicking star ${clickedCoin.isFavorite}")
                         }
                     }
 
@@ -144,13 +145,14 @@ class coinListFragment : Fragment(R.layout.list_fragment) {
                     }
                 },
                 it
-                )
+            )
 
             rvList?.layoutManager = layoutManager
             rvList?.adapter = adapter
 
             scope.launch {
                 val originalCoins = viewModel.loadCoins()
+                println("originalCoins in fragment $originalCoins")
                 adapter.updateData(originalCoins)
             }
         }
