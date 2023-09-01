@@ -6,9 +6,11 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Dao
 import com.example.cryptowithfragments.R
 import com.example.cryptowithfragments.data.datasource.coin.CoinRemoteDataSource
 import com.example.cryptowithfragments.data.datasource.coin.CoinRemoteDataSourceWithRetro
+import com.example.cryptowithfragments.data.datasource.db.CoinDao
 import com.example.cryptowithfragments.data.datasource.image.CoinImageLocalDataSource
 import com.example.cryptowithfragments.data.datasource.image.CoinImageRemoteDataSource
 import com.example.cryptowithfragments.data.repository.CoinRepository
@@ -23,12 +25,14 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
     private lateinit var viewModel: FavoritesViewModelInterface
     private val scope = MainScope()
 
+
     private lateinit var usecase: CoinUseCase
     lateinit var localImageDataSource: CoinImageLocalDataSource
     private lateinit var localDataSource: CoinLocalDataSource
     private lateinit var repositoryCoin: CoinRepository
     private lateinit var repositoryImage: ImageRepository
     private lateinit var adapter: FavoriteCoinAdapter
+    lateinit var coinDao: CoinDao
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,6 +40,7 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
         setupDependencies()
         setupViewModel()
         setupRecyclerView()
+
     }
 
     private fun setupDependencies() {
@@ -43,7 +48,10 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
         localDataSource = CoinLocalDataSource(requireContext())
         repositoryCoin = CoinRepository(
             remoteDatasource = CoinRemoteDataSource(),
-            localDataSource = localDataSource
+            localDataSource = localDataSource,
+            coinDao
+
+
         )
         repositoryImage = ImageRepository(remoteImageDataSource = CoinImageRemoteDataSource(), localImageDataSource = localImageDataSource)
         usecase = CoinUseCase(repositoryCoin = repositoryCoin, repositoryImage = repositoryImage)
@@ -52,44 +60,6 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
     private fun setupViewModel() {
         viewModel = FavoritesViewModel(usecase = usecase)
     }
-
-//    private fun setupRecyclerView() {
-//        val rvList: RecyclerView = requireView().findViewById(R.id.rvList)
-//        val layoutManager = LinearLayoutManager(requireContext())
-//       adapter = favoriteCoinAdapter(emptyList(),
-//            onItemClick = {  clickedCoin ->
-//            val thirdFragment = ThirdFragment()
-//            val bundle = Bundle()
-//            bundle.putSerializable("cryptoInfo", clickedCoin)
-//
-//            thirdFragment.arguments = bundle
-//
-//            parentFragmentManager.beginTransaction().apply {
-//                replace(R.id.flFragment, thirdFragment)
-//                addToBackStack(null)
-//                commit()
-//            }
-//        },
-//            onItemFavIconClick = { clickedCoin ->
-//                scope.launch {
-//                    viewModel.deleteFavorite(clickedCoin)
-//                }
-//
-//                scope.launch {
-//                        var favoriteCoins = viewModel.loadfavorites()
-//                        adapter.updateData(favoriteCoins)
-//                    }
-//            }
-//        )
-//
-//        rvList.layoutManager = layoutManager
-//        rvList.adapter = adapter
-//
-//        scope.launch {
-//            val favoriteCoins = viewModel.loadfavorites()
-//            adapter.updateData(favoriteCoins)
-//        }
-//    }
 
     fun setupRecyclerView() {
         context?.let {

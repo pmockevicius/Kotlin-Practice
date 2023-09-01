@@ -1,12 +1,16 @@
 package com.example.cryptowithfragments.domain.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
 
 data class CoinResponse(
     val data: List<Coin>
+
 )
+@Entity(tableName = "coins")
 data class Coin  (
-    val id: String,
+    @PrimaryKey val id: String,
     val rank: String,
     val symbol: String,
     val name: String,

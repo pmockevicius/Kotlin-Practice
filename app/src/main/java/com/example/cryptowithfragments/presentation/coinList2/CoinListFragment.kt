@@ -4,7 +4,6 @@ import CoinLocalDataSource
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 
 import android.view.View
@@ -17,9 +16,7 @@ import com.example.cryptowithfragments.domain.usecase.CoinUseCase
 import com.example.cryptowithfragments.presentation.coinInfo.ThirdFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.example.cryptowithfragments.data.datasource.coin.CoinRemoteDataSourceWithRetro
+import com.example.cryptowithfragments.data.datasource.db.CoinDao
 import com.example.cryptowithfragments.data.datasource.image.CoinImageLocalDataSource
 import com.example.cryptowithfragments.data.datasource.image.CoinImageRemoteDataSource
 import com.example.cryptowithfragments.data.repository.ImageRepository
@@ -44,14 +41,18 @@ class CoinListFragment : Fragment(R.layout.list_fragment) {
     lateinit var repositoryImage: ImageRepository
 
     private lateinit var adapter: CoinListAdapter
+    private lateinit var coinDao: CoinDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         localImageDataSource = CoinImageLocalDataSource(requireContext())
         localDataSource = CoinLocalDataSource(requireContext())
+//        coinDao = App.instance.appDatabase.coinDao()
+
+
         repositoryCoin =
-            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource)
+            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource )
         repositoryImage = ImageRepository(
             remoteImageDataSource = remoteImageDataSource,
             localImageDataSource = localImageDataSource
@@ -99,6 +100,7 @@ class CoinListFragment : Fragment(R.layout.list_fragment) {
                 searchEditText?.text?.clear()
                 scope.launch {
                     val originalCoins = viewModel.loadCoins()
+                    useCase.saveCoinsToRoomDb(originalCoins)
                     adapter.updateData(originalCoins)
                 }
 

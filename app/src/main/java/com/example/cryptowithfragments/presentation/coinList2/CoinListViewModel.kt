@@ -20,6 +20,8 @@ interface CoinListViewModelInterface {
 
     suspend fun loadfavorites(): List<Coin>
 
+    suspend fun saveCoinsToRoomDb(coins: List<Coin> )
+
     suspend fun test()
 }
 
@@ -64,6 +66,10 @@ class CoinListViewModel(private val useCase: CoinUseCaseInterface) : CoinListVie
 
     override suspend fun loadfavorites(): List<Coin> {
         return useCase.loadFavorites()
+    }
+
+    override suspend fun saveCoinsToRoomDb(coins: List<Coin>) {
+        useCase.saveCoinsToRoomDb(coins)
     }
 
     override suspend fun test(){

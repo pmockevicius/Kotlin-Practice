@@ -1,6 +1,7 @@
 package com.example.cryptowithfragments.data.repository
 
 import com.example.cryptowithfragments.data.datasource.coin.CoinDataSourceInterface
+import com.example.cryptowithfragments.data.datasource.db.CoinDao
 
 import com.example.cryptowithfragments.domain.entity.Coin
 
@@ -11,12 +12,15 @@ interface CoinRepositoryInterface {
 
     suspend fun deleteFavorite(coin: Coin)
 
+    suspend fun insertCoins(coins: List<Coin>)
+    suspend fun getAllCoins(): List<Coin>
+
 
 }
 
-class CoinRepository(remoteDatasource: CoinDataSourceInterface, localDataSource: CoinDataSourceInterface) : CoinRepositoryInterface {
-    private var remoteDatasource: CoinDataSourceInterface = remoteDatasource
-    private var localDatasource: CoinDataSourceInterface = localDataSource
+class CoinRepository(val remoteDatasource: CoinDataSourceInterface, val localDataSource: CoinDataSourceInterface, private val coinDao: CoinDao) : CoinRepositoryInterface {
+
+
 
 
     override suspend fun getCoins(): List<Coin> {
@@ -24,16 +28,24 @@ class CoinRepository(remoteDatasource: CoinDataSourceInterface, localDataSource:
     }
 
     override suspend fun saveFavorite(coin: Coin){
-        localDatasource.saveFavorite(coin)
+        localDataSource.saveFavorite(coin)
     }
 
     override suspend fun loadFavorites(): List<Coin> {
-        var favoriteCoins = localDatasource.loadFavorites()
+        var favoriteCoins = localDataSource.loadFavorites()
         return favoriteCoins
     }
 
     override suspend fun deleteFavorite(coin: Coin) {
-        localDatasource.deleteFavorite(coin)
+        localDataSource.deleteFavorite(coin)
+    }
+
+    override suspend fun insertCoins(coins: List<Coin>) {
+        coinDao.insertAll(coins)
+    }
+
+    override suspend fun getAllCoins(): List<Coin> {
+        return coinDao.getAllCoins()
     }
 
 

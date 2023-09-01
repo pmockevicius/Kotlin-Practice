@@ -21,6 +21,8 @@ interface CoinUseCaseInterface {
     suspend fun deleteFavorite(coin: Coin)
     suspend fun test ()
 
+    suspend fun saveCoinsToRoomDb(coins: List<Coin>)
+
 }
 
 class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: ImageRepositoryInterface) : CoinUseCaseInterface {
@@ -100,6 +102,10 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
     override suspend fun test (){
         println("test called in usecase ")
         repositoryImage.test()
+    }
+
+    override suspend fun saveCoinsToRoomDb(coins: List<Coin>) {
+        repositoryCoin.insertCoins(coins)
     }
 
 }
