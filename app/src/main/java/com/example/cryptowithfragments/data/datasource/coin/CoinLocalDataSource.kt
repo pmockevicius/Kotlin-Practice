@@ -10,18 +10,17 @@ import java.lang.reflect.Type
 
 class CoinLocalDataSource(private val context: Context) : CoinDataSourceInterface {
 
+
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
     private val sharedPrefsKey = "favoriteCoins"
     private val gson = Gson()
-//    private val coinDao: CoinDao = App.instance.appDatabase.coinDao()
     override suspend fun getCoins(): List<Coin> {
         TODO("Not yet implemented")
     }
 
     override suspend fun saveFavorite(coin: Coin) {
         val favorites = loadFavorites().toMutableList()
-//        coinDao.insertAll(favorites)
         favorites.add(coin)
         val favoritesJson = gson.toJson(favorites)
         sharedPreferences.edit().putString(sharedPrefsKey, favoritesJson).apply()

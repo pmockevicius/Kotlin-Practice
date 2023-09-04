@@ -19,16 +19,16 @@ interface CoinRepositoryInterface {
 
 }
 
-class CoinRepository(val remoteDatasource: CoinDataSourceInterface, val localDataSource: CoinDataSourceInterface, private val coinDao: CoinDao) : CoinRepositoryInterface {
+class CoinRepository(val remoteDatasource: CoinDataSourceInterface, val localDataSource: CoinDataSourceInterface) : CoinRepositoryInterface {
 
     // ROOM //
 
 
-    val readAllData: LiveData<List<Coin>> = coinDao.getAllCoins()
-
-    suspend fun addCoins(coins: List<Coin>){
-        coinDao.insertAll(coins)
-    }
+//    val readAllData: LiveData<List<Coin>> = coinDao.getAllCoins()
+//
+//    suspend fun addCoins(coins: List<Coin>){
+//        coinDao.insertAll(coins)
+//    }
 
     //Room//
 

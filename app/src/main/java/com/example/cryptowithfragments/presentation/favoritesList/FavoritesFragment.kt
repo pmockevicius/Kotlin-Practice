@@ -49,7 +49,7 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
         repositoryCoin = CoinRepository(
             remoteDatasource = CoinRemoteDataSource(),
             localDataSource = localDataSource,
-            coinDao
+
 
         )
         repositoryImage = ImageRepository(remoteImageDataSource = CoinImageRemoteDataSource(), localImageDataSource = localImageDataSource)

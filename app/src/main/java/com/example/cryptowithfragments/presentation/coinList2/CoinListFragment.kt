@@ -42,7 +42,7 @@ class CoinListFragment : Fragment(R.layout.list_fragment) {
     lateinit var repositoryImage: ImageRepository
 
     private lateinit var adapter: CoinListAdapter
-    private lateinit var coinDao: CoinDao
+//    private lateinit var coinDao: CoinDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +53,7 @@ class CoinListFragment : Fragment(R.layout.list_fragment) {
 
 
         repositoryCoin =
-            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource, coinDao)
+            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource)
         repositoryImage = ImageRepository(
             remoteImageDataSource = remoteImageDataSource,
             localImageDataSource = localImageDataSource

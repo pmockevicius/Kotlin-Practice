@@ -34,11 +34,11 @@ class CoinListViewModel(private val useCase: CoinUseCaseInterface, application: 
 
 
 
-    init {
-        val coinDao = AppDatabase.getDatabase(application).coinDao()
-
-        println("coinDao $coinDao")
-    }
+//    init {
+//        val coinDao = AppDatabase.getDatabase(application).coinDao()
+//
+//        println("coinDao $coinDao")
+//    }
 
     override suspend fun loadCoins(): List<Coin> {
         return try {
