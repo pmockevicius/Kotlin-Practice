@@ -1,6 +1,7 @@
 package com.example.cryptowithfragments.presentation.coinList2
 
 import CoinLocalDataSource
+import android.app.Application
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -48,17 +49,17 @@ class CoinListFragment : Fragment(R.layout.list_fragment) {
 
         localImageDataSource = CoinImageLocalDataSource(requireContext())
         localDataSource = CoinLocalDataSource(requireContext())
-//        coinDao = App.instance.appDatabase.coinDao()
+
 
 
         repositoryCoin =
-            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource )
+            CoinRepository(remoteDatasource = remoteDatasource, localDataSource = localDataSource, coinDao)
         repositoryImage = ImageRepository(
             remoteImageDataSource = remoteImageDataSource,
             localImageDataSource = localImageDataSource
         )
         useCase = CoinUseCase(repositoryCoin = repositoryCoin, repositoryImage = repositoryImage)
-        viewModel = CoinListViewModel(useCase)
+        viewModel = CoinListViewModel(useCase, application = Application())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,5 +1,6 @@
 package com.example.cryptowithfragments.data.repository
 
+import androidx.lifecycle.LiveData
 import com.example.cryptowithfragments.data.datasource.coin.CoinDataSourceInterface
 import com.example.cryptowithfragments.data.datasource.db.CoinDao
 
@@ -20,8 +21,16 @@ interface CoinRepositoryInterface {
 
 class CoinRepository(val remoteDatasource: CoinDataSourceInterface, val localDataSource: CoinDataSourceInterface, private val coinDao: CoinDao) : CoinRepositoryInterface {
 
+    // ROOM //
 
 
+    val readAllData: LiveData<List<Coin>> = coinDao.getAllCoins()
+
+    suspend fun addCoins(coins: List<Coin>){
+        coinDao.insertAll(coins)
+    }
+
+    //Room//
 
     override suspend fun getCoins(): List<Coin> {
         return remoteDatasource.getCoins()
@@ -41,12 +50,17 @@ class CoinRepository(val remoteDatasource: CoinDataSourceInterface, val localDat
     }
 
     override suspend fun insertCoins(coins: List<Coin>) {
-        coinDao.insertAll(coins)
+//        coinDao.insertAll(coins)
     }
 
     override suspend fun getAllCoins(): List<Coin> {
-        return coinDao.getAllCoins()
+        TODO("Not yet implemented")
     }
+
+//    override suspend fun getAllCoins(): List<Coin> {
+////        return coinDao.getAllCoins()
+//       listOf<Coin>()
+//    }
 
 
 }

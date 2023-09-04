@@ -32,7 +32,7 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
     private lateinit var repositoryCoin: CoinRepository
     private lateinit var repositoryImage: ImageRepository
     private lateinit var adapter: FavoriteCoinAdapter
-    lateinit var coinDao: CoinDao
+    private lateinit var coinDao: CoinDao
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,7 +50,6 @@ class FavoritesFragment : Fragment(R.layout.favorites_fragment) {
             remoteDatasource = CoinRemoteDataSource(),
             localDataSource = localDataSource,
             coinDao
-
 
         )
         repositoryImage = ImageRepository(remoteImageDataSource = CoinImageRemoteDataSource(), localImageDataSource = localImageDataSource)

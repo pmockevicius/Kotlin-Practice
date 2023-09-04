@@ -1,5 +1,6 @@
 package com.example.cryptowithfragments.data.datasource.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -16,5 +17,5 @@ interface CoinDao {
 
 
     @Query("SELECT * FROM coins")
-    suspend fun getAllCoins(): List<Coin>
+     fun getAllCoins(): LiveData<List<Coin>>
 }

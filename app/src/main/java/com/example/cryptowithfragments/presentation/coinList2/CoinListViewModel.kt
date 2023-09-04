@@ -1,7 +1,9 @@
 package com.example.cryptowithfragments.presentation.coinList2
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.example.cryptowithfragments.data.datasource.db.AppDatabase
 import com.example.cryptowithfragments.domain.entity.Coin
 import com.example.cryptowithfragments.domain.usecase.CoinUseCaseInterface
 import kotlinx.coroutines.MainScope
@@ -25,12 +27,18 @@ interface CoinListViewModelInterface {
     suspend fun test()
 }
 
-class CoinListViewModel(private val useCase: CoinUseCaseInterface) : CoinListViewModelInterface {
+class CoinListViewModel(private val useCase: CoinUseCaseInterface, application: Application) : CoinListViewModelInterface {
     override val coins: MutableLiveData<List<Coin>> = MutableLiveData<List<Coin>>()
     private val scope = MainScope()
     override var originalCoins : List<Coin> = listOf()
 
 
+
+    init {
+        val coinDao = AppDatabase.getDatabase(application).coinDao()
+
+        println("coinDao $coinDao")
+    }
 
     override suspend fun loadCoins(): List<Coin> {
         return try {
