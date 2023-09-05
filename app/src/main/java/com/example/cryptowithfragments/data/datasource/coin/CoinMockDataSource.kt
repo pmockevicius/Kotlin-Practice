@@ -19,6 +19,10 @@ class CoinMockDataSource: CoinDataSourceInterface {
         return listOf(Coin(id,rank,symbol, name, supply, maxSupply,marketCapUsd, volumeUsd24Hr,priceUsd, changePercent24Hr))
     }
 
+    override suspend fun saveCoins(coins: List<Coin>) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun saveFavorite(coin: Coin) {
         TODO("Not yet implemented")
     }

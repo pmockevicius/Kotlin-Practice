@@ -8,8 +8,7 @@ import com.google.gson.reflect.TypeToken
 
 import java.lang.reflect.Type
 
-class CoinLocalDataSource(private val context: Context) : CoinDataSourceInterface {
-
+class CoinLocalDataSource(context: Context) : CoinDataSourceInterface {
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
@@ -19,12 +18,15 @@ class CoinLocalDataSource(private val context: Context) : CoinDataSourceInterfac
         TODO("Not yet implemented")
     }
 
+    override suspend fun saveCoins(coins: List<Coin>) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun saveFavorite(coin: Coin) {
         val favorites = loadFavorites().toMutableList()
         favorites.add(coin)
         val favoritesJson = gson.toJson(favorites)
         sharedPreferences.edit().putString(sharedPrefsKey, favoritesJson).apply()
-
     }
 
     override suspend fun loadFavorites(): List<Coin> {
@@ -43,7 +45,6 @@ class CoinLocalDataSource(private val context: Context) : CoinDataSourceInterfac
         favorites.removeAll { it.id == coin.id }
         val favoritesJson = gson.toJson(favorites)
         sharedPreferences.edit().putString(sharedPrefsKey, favoritesJson).apply()
-
     }
 
 }

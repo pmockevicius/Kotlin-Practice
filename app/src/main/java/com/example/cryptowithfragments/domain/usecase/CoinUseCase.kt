@@ -7,7 +7,6 @@ import com.example.cryptowithfragments.domain.entity.Image
 
 
 interface CoinUseCaseInterface {
-    suspend fun getCoins(): List<Coin>
     suspend fun getImages(): List<Image>
     suspend fun getCoinWithNameFromList(name: String, ofList: List<Coin>): List<Coin>
     suspend fun getCoinsWithImage(): List<Coin>
@@ -29,10 +28,6 @@ class CoinUseCase(repositoryCoin: CoinRepositoryInterface, repositoryImage: Imag
     private var repositoryCoin: CoinRepositoryInterface = repositoryCoin
     private var repositoryImage: ImageRepositoryInterface = repositoryImage
     var Images: List<Image> = listOf<Image>()
-
-    override suspend fun getCoins(): List<Coin> {
-        return repositoryCoin.getCoins()
-    }
 
 
     override suspend fun getCoinWithNameFromList(name: String, ofList: List<Coin>): List<Coin> {

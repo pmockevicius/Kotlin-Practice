@@ -15,6 +15,10 @@ class CoinRemoteDataSourceWithRetro: CoinDataSourceInterface {
         }
     }
 
+    override suspend fun saveCoins(coins: List<Coin>) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun saveFavorite(coin: Coin) {
         TODO("Not yet implemented")
     }

@@ -17,6 +17,8 @@ import com.example.cryptowithfragments.domain.usecase.CoinUseCase
 import com.example.cryptowithfragments.presentation.coinInfo.ThirdFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cryptowithfragments.data.datasource.coin.CoinDataSourceInterface
+import com.example.cryptowithfragments.data.datasource.coin.CoinLocalDbDataSource
 import com.example.cryptowithfragments.data.datasource.db.CoinDao
 import com.example.cryptowithfragments.data.datasource.image.CoinImageLocalDataSource
 import com.example.cryptowithfragments.data.datasource.image.CoinImageRemoteDataSource
@@ -37,7 +39,7 @@ class CoinListFragment : Fragment(R.layout.list_fragment) {
     var remoteDatasource = CoinRemoteDataSource()
     var remoteImageDataSource = CoinImageRemoteDataSource()
     lateinit var localImageDataSource: CoinImageLocalDataSource
-    lateinit var localDataSource: CoinLocalDataSource
+    lateinit var localDataSource: CoinDataSourceInterface
     lateinit var repositoryCoin: CoinRepository
     lateinit var repositoryImage: ImageRepository
 
@@ -48,7 +50,7 @@ class CoinListFragment : Fragment(R.layout.list_fragment) {
         super.onCreate(savedInstanceState)
 
         localImageDataSource = CoinImageLocalDataSource(requireContext())
-        localDataSource = CoinLocalDataSource(requireContext())
+        localDataSource = CoinLocalDbDataSource(requireContext())
 
 
 

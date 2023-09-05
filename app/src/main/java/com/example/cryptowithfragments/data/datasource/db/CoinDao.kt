@@ -14,8 +14,6 @@ interface CoinDao {
     @Insert
     suspend fun insertAll(coins: List<Coin>)
 
-
-
     @Query("SELECT * FROM coins")
-     fun getAllCoins(): LiveData<List<Coin>>
+    fun getAllCoins(): List<Coin>
 }
